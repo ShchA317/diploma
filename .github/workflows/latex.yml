@@ -13,9 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Clean previous build
-        run: latexmk -C -outdir=target/
-
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
