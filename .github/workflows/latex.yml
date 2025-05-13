@@ -1,0 +1,25 @@
+name: Build LaTeX document
+
+on:
+  push:
+    branches:
+      - main  # или другая ветка, например 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Clean previous build
+        run: latexmk -C -outdir=target/
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+          latexmk_use_xelatex: true
+          latexmk_shell_escape: true
+          args: -outdir=target/ -f
