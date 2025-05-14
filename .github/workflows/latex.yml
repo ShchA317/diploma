@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pdf
-          path: target/main.pdf
+          path: tex/target/main.pdf
 
   code-tests:
     if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
