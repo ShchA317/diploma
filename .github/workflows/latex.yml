@@ -12,10 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Compile LaTeX document
-        uses: xu-cheng/latex-action@v2
-        with:
-          root_file: tex/main.tex
-          latexmk_use_xelatex: true
-          latexmk_shell_escape: true
-          args: -outdir=target/ -f
+      - name: Build from tex/ with latexmkrc
+        run: |
+          cd tex
+          latexmk -f -outdir=../target/ main.tex
