@@ -14,10 +14,9 @@ jobs:
 
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
-        with:
-          root_file: tex/main.tex
-          latexmk_use_xelatex: true
-          args: -outdir=../target/ -f
+        run: |
+          cd tex
+          latexmk -f -outdir=../target/ main.tex
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
