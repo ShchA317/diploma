@@ -1,0 +1,5 @@
+$pdf_mode = 1;
+$bibtex_use = 2;
+$use_biber = 1;
+$out_dir = 'target';
+$xelatex = 'xelatex %O -output-directory=target %S';
