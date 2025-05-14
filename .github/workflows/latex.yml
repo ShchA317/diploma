@@ -3,11 +3,20 @@ name: Build LaTeX from tex/
 on: [push]
 
 jobs:
-  build:
+  tex-build:
     runs-on: ubuntu-latest
-
+    name: Build LaTeX
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check for tex/ changes
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            tex:
+              - 'tex/**'
 
       - name: Install fonts (если нужен TNR или другой)
         run: sudo apt-get update && sudo apt-get install -y fonts-freefont-ttf
@@ -25,3 +34,37 @@ jobs:
         with:
           name: pdf
           path: target/main.pdf
+
+  code-tests:
+    if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    name: Run code tests
+    # запустим, только если изменено что-то в code/
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check for code/ changes
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            code:
+              - 'code/**'
+
+      - name: Set up Python
+        if: steps.changes.outputs.code == 'true'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        if: steps.changes.outputs.code == 'true'
+        run: |
+          pip install -r code/requirements.txt
+
+      - name: Run tests
+        if: steps.changes.outputs.code == 'true'
+        run: |
+          cd code
+          pytest
