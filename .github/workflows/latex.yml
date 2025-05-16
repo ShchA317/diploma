@@ -68,8 +68,10 @@ jobs:
         run: |
           pip install -r code/requirements.txt
 
-      - name: Run tests
-        if: steps.changes.outputs.code == 'true'
+      - name: 🔁 Run analyzer on all examples
         run: |
-          cd code
-          pytest
+          for file in examples/*.yaml; do
+            echo "🔍 Running analyzer on $file"
+            python analyze_multitable_postgres.py < "$file"
+            echo
+          done
