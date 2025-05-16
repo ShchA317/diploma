@@ -72,6 +72,6 @@ jobs:
         run: |
           for file in code/examples/*.yaml; do
             echo "🔍 Running analyzer on $file"
-            python analyze_multitable_postgres.py < "$file"
+            python code/analyze_multitable_postgres.py < "$file"
             echo
           done
