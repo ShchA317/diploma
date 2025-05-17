@@ -39,7 +39,7 @@ fi
 echo "🟢 Виртуальное окружение готово к работе"
 echo "----------------------------------------"
 
-for file in examples/*.yaml; do
+for file in examples/example*/*.yaml; do
     echo "🔍 Running analyzer on $file"
     python3 analyze_postgres_files.py "$file"
     echo
