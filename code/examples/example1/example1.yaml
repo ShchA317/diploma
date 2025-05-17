@@ -34,3 +34,4 @@ load_prediction_config:
   environment:
     cpu_cores: 8
     ram_gb: 32
+

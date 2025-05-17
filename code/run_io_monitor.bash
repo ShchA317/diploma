@@ -19,28 +19,35 @@ POST_SYS="/tmp/sys_post.txt"
 PRE_PROC="/tmp/sys_pre_proc.txt"
 POST_PROC="/tmp/sys_post_proc.txt"
 
-# Сбор доступных example-директорий
+# 🔍 Сбор доступных example-директорий (включая подкаталоги examples/)
 echo "📁 Доступные примеры:"
-mapfile -t EXAMPLES < <(find . -maxdepth 1 -type d -name "example*" | sort)
+mapfile -t EXAMPLES < <(find ./examples -maxdepth 1 -type d -name "example*" | sort)
+
 if [ ${#EXAMPLES[@]} -eq 0 ]; then
-    echo "❌ Нет директорий вида example*/"
+    echo "❌ Не найдены директории вида examples/example*/"
     exit 1
 fi
 
+# Вывод списка директорий
 for i in "${!EXAMPLES[@]}"; do
     echo "[$i] ${EXAMPLES[$i]}"
 done
 
-# Запрос выбора пользователя
-read -p "Выберите номер примера: " EX_INDEX
+# 🔢 Запрос номера примера
+while true; do
+    read -p "Введите номер примера [0..$((${#EXAMPLES[@]} - 1))]: " EX_INDEX
+    if [[ "$EX_INDEX" =~ ^[0-9]+$ ]] && [ "$EX_INDEX" -ge 0 ] && [ "$EX_INDEX" -lt "${#EXAMPLES[@]}" ]; then
+        break
+    fi
+    echo "❌ Неверный ввод. Попробуйте снова."
+done
+
 SELECTED_DIR="${EXAMPLES[$EX_INDEX]}"
-if [ -z "$SELECTED_DIR" ]; then
-    echo "❌ Неверный выбор."
-    exit 1
-fi
+echo "✅ Выбранный пример: $SELECTED_DIR"
 
 QUERY_FILE="$SELECTED_DIR/query.sql"
 PREPARE_FILE="$SELECTED_DIR/prepare.sql"
+
 echo "📂 Выбранный пример: $SELECTED_DIR"
 echo "📄 prepare.sql: $PREPARE_FILE"
 echo "📄 query.sql:   $QUERY_FILE"
