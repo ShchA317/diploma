@@ -171,7 +171,7 @@ fi
 
 echo "📤 Сбор финальной системной статистики..."
 iostat -dx 1 1 > "$POST_SYS"
-grep -E '^rchar|^wchar|^syscr|^syscw' /proc/$PG_PID/io > "$POST_PROC"
+sudo grep -E '^rchar|^wchar|^syscr|^syscw' /proc/$PG_PID/io > "$POST_PROC"
 
 # --- 5. Анализ PostgreSQL I/O ---
 echo
