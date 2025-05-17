@@ -73,6 +73,6 @@ jobs:
           tree
           for file in code/examples/*.yaml; do
             echo "🔍 Running analyzer on $file"
-            python code/analyze_multitable_postgres.py < "$file"
+            python code/analyze_postgres_files.py < "$file"
             echo
           done
