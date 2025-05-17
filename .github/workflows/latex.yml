@@ -70,6 +70,7 @@ jobs:
 
       - name: 🔁 Run analyzer on all examples
         run: |
+          tree
           for file in code/examples/*.yaml; do
             echo "🔍 Running analyzer on $file"
             python code/analyze_multitable_postgres.py < "$file"
