@@ -1,7 +1,7 @@
-# analyze_multitable_postgres.py
 import yaml
 import math
 import re
+import argparse
 
 PAGE_SIZE = 8192
 TOAST_THRESHOLD = 2000
@@ -123,8 +123,20 @@ def print_results(all_files):
         print(f"{f['filename']:<30} {kb:<15.1f} {f['rps']:<10} {f['access_type']}")
 
 if __name__ == "__main__":
-    with open("config.yaml", "r") as f:
-        config = yaml.safe_load(f)['load_prediction_config']
+    # Добавлен парсер аргументов
+    parser = argparse.ArgumentParser(description="PostgreSQL storage analyzer")
+    parser.add_argument("config", help="Path to YAML config file", default="config.yaml", nargs='?')
+    args = parser.parse_args()
+
+    try:
+        with open(args.config, "r") as f:
+            config = yaml.safe_load(f)['load_prediction_config']
+    except FileNotFoundError:
+        print(f"Error: Config file '{args.config}' not found!")
+        exit(1)
+    except yaml.YAMLError as e:
+        print(f"Error parsing YAML: {e}")
+        exit(1)
 
     joined_tables = parse_query_for_tables(config['load_generator']['query'])
     rps = config['load_generator']['rps']

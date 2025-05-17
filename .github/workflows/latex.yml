@@ -66,13 +66,9 @@ jobs:
       - name: Install dependencies
         if: steps.changes.outputs.code == 'true'
         run: |
-          pip install -r code/requirements.txt
+          pip3 install -r code/requirements.txt
 
       - name: 🔁 Run analyzer on all examples
         run: |
-          tree
-          for file in code/examples/*.yaml; do
-            echo "🔍 Running analyzer on $file"
-            python code/analyze_postgres_files.py < "$file"
-            echo
-          done
+          cd code
+          bash run-examples.bash
