@@ -11,10 +11,16 @@ CREATE TABLE users (
 INSERT INTO users (email, interests, profile)
 SELECT
   'user' || i || '@example.com',
-  ARRAY['music', 'sports', 'tech'][1 + (random() * 2)::int : 3],
+  ARRAY[
+    CASE (random() * 3)::int
+      WHEN 0 THEN 'music'
+      WHEN 1 THEN 'sports'
+      ELSE 'tech'
+    END
+  ],
   jsonb_build_object(
     'age', 18 + (random() * 50)::int,
-    'country', ARRAY['US', 'CA', 'UK', 'DE', 'FR'][(random() * 4)::int + 1]
+    'country', (ARRAY['US', 'CA', 'UK', 'DE', 'FR'])[floor(random() * 5)::int + 1]
   )
 FROM generate_series(1, 500000) AS s(i);
 
@@ -28,10 +34,14 @@ CREATE TABLE orders (
   status TEXT
 );
 
--- Заполнение таблицы orders 1200000 строк
 INSERT INTO orders (user_id, amount, status)
 SELECT
   (random() * 499999)::int + 1,
   round((random() * 1000)::numeric, 2),
-  ARRAY['new', 'processing', 'shipped', 'cancelled'][(random() * 3)::int + 1]
+  CASE (random() * 4)::int
+    WHEN 0 THEN 'new'
+    WHEN 1 THEN 'processing'
+    WHEN 2 THEN 'shipped'
+    ELSE 'cancelled'
+  END
 FROM generate_series(1, 1200000) AS s(i);
