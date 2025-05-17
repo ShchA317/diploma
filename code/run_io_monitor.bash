@@ -100,7 +100,7 @@ echo
 
 # --- 1. Сбор PostgreSQL-IO статистики ---
 echo "📥 Сбор исходной PostgreSQL-статистики..."
-if [ "$PG_VERSION_NUM" -ge 160000 ]; then
+if [ "$PG_VERSION" -ge 160000 ]; then
     # PostgreSQL 16 и выше
     psql -U "$DB_USER" -d "$DB_NAME" -Atc "
         SELECT backend_type, object, context,
@@ -113,6 +113,7 @@ if [ "$PG_VERSION_NUM" -ge 160000 ]; then
         ORDER BY 1, 2, 3;" > "$PRE_IO"
 else
     # PostgreSQL до версии 16
+    echo "WARN - PostgreSQL версия < 16"
     psql -U "$DB_USER" -d "$DB_NAME" -Atc "
         SELECT relname, heap_blks_read, heap_blks_hit
         FROM pg_statio_user_tables
@@ -152,7 +153,7 @@ echo "✅ Нагрузка завершена."
 
 # --- 4. Сбор статистики после выполнения запроса ---
 echo "📤 Сбор финальной PostgreSQL-статистики..."
-if [ "$PG_VERSION_NUM" -ge 160000 ]; then
+if [ "$PG_VERSION" -ge 160000 ]; then
     # PostgreSQL 16 и выше
     psql -U "$DB_USER" -d "$DB_NAME" -Atc "
         SELECT backend_type, object, context,
@@ -163,6 +164,7 @@ if [ "$PG_VERSION_NUM" -ge 160000 ]; then
         ORDER BY 1, 2, 3;" > "$POST_IO"
 else
     # PostgreSQL ниже 16
+    echo "WARN - PostgreSQL версия < 16"
     psql -U "$DB_USER" -d "$DB_NAME" -Atc "
         SELECT relname, heap_blks_read, heap_blks_hit
         FROM pg_statio_user_tables
