@@ -105,9 +105,7 @@ if [ "$PG_VERSION" -ge 160000 ]; then
     psql -U "$DB_USER" -d "$DB_NAME" -Atc "
         SELECT backend_type, object, context,
                sum(reads) AS reads,
-               sum(writes) AS writes,
-               sum(reads_direct) AS reads_direct,
-               sum(writes_direct) AS writes_direct
+               sum(writes) AS writes
         FROM pg_stat_io
         GROUP BY backend_type, object, context
         ORDER BY 1, 2, 3;" > "$PRE_IO"
@@ -157,8 +155,8 @@ if [ "$PG_VERSION" -ge 160000 ]; then
     # PostgreSQL 16 и выше
     psql -U "$DB_USER" -d "$DB_NAME" -Atc "
         SELECT backend_type, object, context,
-               sum(reads_direct) AS reads_direct,
-               sum(writes_direct) AS writes_direct
+                sum(reads) AS reads,
+                sum(writes) AS writes
         FROM pg_stat_io
         GROUP BY backend_type, object, context
         ORDER BY 1, 2, 3;" > "$POST_IO"
