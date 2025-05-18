@@ -139,7 +139,7 @@ export -f run_query
 export DB_USER DB_NAME QUERY_FILE
 
 echo "Принудительно сбрасываем кэш"
-psql -U "$DB_USER" -d "$DB_NAME" -c "DISCARD PLANS; DISCARD ALL;"
+psql -U "$DB_USER" -d "$DB_NAME" -c "DISCARD ALL;"
 
 # ----------------------------
 # Основной цикл нагрузки
