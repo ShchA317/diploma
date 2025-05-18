@@ -75,7 +75,7 @@ mkdir -p "$LOG_DIR" "$RESULT_DIR"
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 # Получаем PID PostgreSQL
-PG_PID=$(ps -u postgres -o pid,cmd | grep "$DB_NAME" | grep -v grep | awk '{print $1}' | head -n 1)
+PG_PID=$(pgrep -u postgres -x postgres | head -n 1)
 if [ -z "$PG_PID" ]; then
     echo "❌ PostgreSQL не запущен или PID не найден."
     exit 1
