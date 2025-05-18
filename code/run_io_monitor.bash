@@ -145,6 +145,7 @@ psql -U "$DB_USER" -d "$DB_NAME" -c "DISCARD ALL;"
 # Основной цикл нагрузки
 # ----------------------------
 echo "🚀 Запуск нагрузки: $RPS RPS, $DURATION секунд..."
+LOAD_START=$(date +%s)
 echo "🚀 Запуск запроса из $QUERY_FILE..."
 for ((i=1; i<=DURATION; i++)); do
     seq $RPS | parallel -j $RPS run_query
@@ -152,6 +153,8 @@ for ((i=1; i<=DURATION; i++)); do
 done
 
 echo "✅ Нагрузка завершена."
+LOAD_END=$(date +%s)
+echo "⏱️ Время нагрузки: $((LOAD_END - LOAD_START)) секунд"
 
 # --- 4. Сбор статистики после выполнения запроса ---
 echo "📤 Сбор финальной PostgreSQL-статистики..."
@@ -179,6 +182,11 @@ iostat -dx 1 1 > "$POST_SYS"
 sudo grep -E '^rchar|^wchar|^syscr|^syscw' /proc/$PG_PID/io > "$POST_PROC"
 
 # --- 5. Анализ PostgreSQL I/O ---
+
+# Сортировка файлов
+sort "$PRE_IO" -o "$PRE_IO"
+sort "$POST_IO" -o "$POST_IO"
+
 echo
 echo "📊 Δ PostgreSQL I/O:" | tee -a "$RESULT_FILE"
 if [ "$PG_VERSION" -ge 160000 ]; then
