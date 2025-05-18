@@ -75,7 +75,7 @@ mkdir -p "$LOG_DIR" "$RESULT_DIR"
 exec > >(tee -a "$LOG_FILE") 2>&1
 
 # Получаем PID PostgreSQL
-PG_PID=$(pidof postgres | awk '{print $1}')
+PG_PID=$(ps -u postgres -o pid,cmd | grep "$DB_NAME" | grep -v grep | awk '{print $1}' | head -n 1)
 if [ -z "$PG_PID" ]; then
     echo "❌ PostgreSQL не запущен или PID не найден."
     exit 1
@@ -111,12 +111,13 @@ if [ "$PG_VERSION" -ge 160000 ]; then
         ORDER BY 1, 2, 3;" > "$PRE_IO"
 else
     # PostgreSQL до версии 16
-    echo "WARN - PostgreSQL версия < 16"
-    psql -U "$DB_USER" -d "$DB_NAME" -Atc "
+    echo "WARN - PostgreSQL версия < 16. Отсутвуют результаты из pg_stat_io"
+fi
+
+psql -U "$DB_USER" -d "$DB_NAME" -Atc "
         SELECT relname, heap_blks_read, heap_blks_hit
         FROM pg_statio_user_tables
         ORDER BY 2 DESC;" > "$PRE_IO"
-fi
 
 # --- 2. Сбор системной статистики ---
 echo "📥 Сбор исходной системной статистики..."
@@ -136,6 +137,9 @@ run_query() {
 
 export -f run_query
 export DB_USER DB_NAME QUERY_FILE
+
+echo "Принудительно сбрасываем кэш"
+psql -U "$DB_USER" -d "$DB_NAME" -c "DISCARD PLANS; DISCARD ALL;"
 
 # ----------------------------
 # Основной цикл нагрузки
@@ -162,12 +166,13 @@ if [ "$PG_VERSION" -ge 160000 ]; then
         ORDER BY 1, 2, 3;" > "$POST_IO"
 else
     # PostgreSQL ниже 16
-    echo "WARN - PostgreSQL версия < 16"
-    psql -U "$DB_USER" -d "$DB_NAME" -Atc "
+    echo "WARN - PostgreSQL версия < 16. Отсутвуют результаты из pg_stat_io"
+fi
+
+psql -U "$DB_USER" -d "$DB_NAME" -Atc "
         SELECT relname, heap_blks_read, heap_blks_hit
         FROM pg_statio_user_tables
         ORDER BY 2 DESC;" > "$POST_IO"
-fi
 
 echo "📤 Сбор финальной системной статистики..."
 iostat -dx 1 1 > "$POST_SYS"
