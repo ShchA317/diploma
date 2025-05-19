@@ -15,8 +15,6 @@
 \usepackage{enumitem}
 \usepackage{multicol}
 \usepackage[hidelinks]{hyperref}
-\usepackage{listings}
-\usepackage{xcolor}
 \usepackage{soul} % для выделения текста
 \usepackage{minted}
 \usepackage{lipsum}
@@ -93,6 +91,35 @@
     autolang=other,      % Для multilingual библиографии
 ]{biblatex}
 
+
+\usepackage{listings}
+\usepackage{xcolor} % для цветовой подсветки
+
+% Настройка стиля листинга по ГОСТ
+\lstset{
+  basicstyle=\ttfamily\normalsize, % ← Размер шрифта ближе к 12 пт
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=5pt,
+  frame=single,
+  breaklines=true,
+  tabsize=2
+}
+
+\lstdefinelanguage{yaml}{
+  keywords={true,false,null,y,n},
+  keywordstyle=\color{blue}\bfseries,
+  sensitive=false,
+  comment=[l]{\#},
+  morestring=[b]",
+  morestring=[d]',
+  stringstyle=\color{red},
+  identifierstyle=\color{black},
+  moredelim=[l][\color{gray}]{-}
+}
+
+
 \addbibresource{references.bib}
 
 \begin{document}
@@ -116,7 +143,9 @@
     \newpage
     \input{4.3-core}
     \newpage
-    \input{5-conclusion}
+    \input{5-testing}
+    \newpage
+    \input{6-conclusion}
     \newpage
     \printbibliography[title={СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}]
     \newpage

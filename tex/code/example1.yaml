@@ -1,0 +1,59 @@
+load_prediction_config:
+  tables:
+    - name: users
+      ddl: |
+        CREATE TABLE users (
+          id SERIAL PRIMARY KEY,
+          email TEXT,
+          interests TEXT[],
+          profile JSONB
+        );
+      row_count: 500000
+
+    - name: orders
+      ddl: |
+        CREATE TABLE orders (
+          id SERIAL PRIMARY KEY,
+          user_id INT,
+          amount NUMERIC,
+          status TEXT
+        );
+      row_count: 1200000
+
+  load_generator:
+    query: |
+      SELECT u.email, o.amount
+      FROM users u
+      JOIN orders o ON u.id = o.user_id
+      WHERE u.interests @> ARRAY['tech'] AND o.status = 'paid';
+    rps: 750
+
+  postgresql_config:
+    shared_buffers: "4GB"
+    effective_cache_size: "12GB"
+    work_mem: "4MB"
+    maintenance_work_mem: "64MB"
+    wal_buffers: "-1"
+    max_wal_size: "1GB"
+    min_wal_size: "80MB"
+    checkpoint_timeout: "5min"
+    checkpoint_completion_target: 0.9
+    wal_compression: "on"
+    wal_writer_delay: "200ms"
+    wal_level: "replica"
+    fsync: "on"
+    synchronous_commit: "on"
+    random_page_cost: 4.0
+    seq_page_cost: 1.0
+    temp_buffers: "8MB"
+    autovacuum: "on"
+    autovacuum_max_workers: 3
+    autovacuum_naptime: "1min"
+    autovacuum_vacuum_cost_limit: 200
+    autovacuum_vacuum_cost_delay: "20ms"
+
+  environment:
+    cpu_cores: 8
+    ram_gb: 32
+    storage_type: "ssd"
+    os_cache_enabled: true
