@@ -6,6 +6,7 @@ import './App.css';
 export default function App() {
   const [tables, setTables] = useState([{ name: "", ddl: "", row_count: "" }]);
   const [query, setQuery] = useState("");
+  const [rps, setRps] = useState("");
 
   const ON_OFF_FIELDS = ["fsync", "autovacuum", "wal_compression", "synchronous_commit"];
   const TIME_FIELDS = [
@@ -33,7 +34,7 @@ export default function App() {
     effective_cache_size: "12GB",
     work_mem: "4MB",
     maintenance_work_mem: "64MB",
-    wal_buffers: "-1",
+    wal_buffers: "16MB",
     max_wal_size: "1GB",
     min_wal_size: "80MB",
     checkpoint_timeout: "5min",
@@ -201,19 +202,19 @@ export default function App() {
                   return (
                     <div key={key} className="mb-4">
                       <label htmlFor={`config-${key}`} className="block text-sm font-medium text-gray-600">{key}</label>
-                      <div className="flex gap-2">
+                       <div className="input-unit-row">
                         <input
                           type="number"
                           id={`config-${key}-number`}
                           value={number}
                           min={0}
-                          className="mt-1 block w-2/3 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                          className="input-half"
                           onChange={e => handleConfigChange(key, e.target.value + unit)}
                         />
                         <select
                           id={`config-${key}-unit`}
                           value={unit}
-                          className="mt-1 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                          className="input-half"
                           onChange={e => handleConfigChange(key, number + e.target.value)}
                         >
                           {TIME_UNITS.map(u => <option key={u} value={u}>{u}</option>)}
@@ -274,6 +275,22 @@ export default function App() {
 
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-gray-700 mb-3">Query</h2>
+            <div className="mb-2">
+              <label
+                htmlFor="query-rps"
+                className="block text-sm font-medium text-gray-600"
+              >
+                RPS (queries/sec)
+              </label>
+              <input
+                type="number"
+                id="query-rps"
+                className="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                value={rps}
+                onChange={(e) => setRps(e.target.value)}
+                min={0}
+              />
+            </div>
             <textarea
               rows={6}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
