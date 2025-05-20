@@ -1,0 +1,23 @@
+key,hint
+shared_buffers,Размер буфера памяти для shared memory
+effective_cache_size,Предполагаемый объём кэша операционной системы
+work_mem,Память для операций сортировки и хеширования
+maintenance_work_mem,Объём памяти для VACUUM, CREATE INDEX и т.д.
+wal_buffers,Размер WAL буфера
+max_wal_size,Максимальный размер WAL файлов
+min_wal_size,Минимальный размер WAL файлов
+checkpoint_timeout,Максимальный интервал между checkpoint'ами
+checkpoint_completion_target,Целевой процент выполнения checkpoint'а
+wal_compression,Сжатие WAL
+wal_writer_delay,Задержка WAL writer
+wal_level,Уровень журналирования WAL
+fsync,Принудительная синхронизация на диск
+synchronous_commit,Синхронная фиксация транзакций
+random_page_cost,Стоимость произвольного чтения страницы
+seq_page_cost,Стоимость последовательного чтения страницы
+temp_buffers,Буферы для временных данных
+autovacuum,Автоматическая очистка
+autovacuum_max_workers,Максимум рабочих процессов autovacuum
+autovacuum_naptime,Интервал между autovacuum-проходами
+autovacuum_vacuum_cost_limit,Лимит стоимости вакуума
+autovacuum_vacuum_cost_delay,Задержка между операциями вакуума
