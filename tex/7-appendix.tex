@@ -3,11 +3,13 @@
     \section*{ПРИЛОЖЕНИЕ А}
 \end{center}
 
-\begin{tikzpicture}
-    \begin{axis}
-        \addplot {sin(deg(x))};
-    \end{axis}
-\end{tikzpicture}
+\subsection*{Настройки тестовой среды}
+
+\label{app:postgresql_conf} % Метка для ссылки
+\begin{center}
+    \textbf{Файл конфигурации \texttt{postgresql.conf}}
+\end{center}
+\lstinputlisting[language=,basicstyle=\scriptsize\ttfamily]{code/postgresql.conf}
 
 \newpage
 

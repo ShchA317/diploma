@@ -120,6 +120,19 @@
 }
 
 
+\newcounter{listing}[section]  % Счётчик листингов, привязанный к секциям
+\renewcommand{\thelisting}{\thesection.\arabic{listing}}  % Формат номера: X.Y
+
+% Команда для оформления листинга
+\newcommand{\insertlisting}[2]{%
+    \refstepcounter{listing}%
+    \begin{center}
+        \textbf{Листинг \thelisting} --- #1
+    \end{center}
+    \lstinputlisting{#2}
+}
+
+
 \addbibresource{references.bib}
 
 \begin{document}

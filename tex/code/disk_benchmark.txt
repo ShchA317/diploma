@@ -1,0 +1,27 @@
+# fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=1G --readwrite=randrw --rwmixread=75 > disk_benchmark.txt
+
+test: (g=0): rw=randrw, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=libaio, iodepth=64
+fio-3.36
+Starting 1 process
+test: Laying out IO file (1 file / 1024MiB)
+
+test: (groupid=0, jobs=1): err= 0: pid=81186: Wed May 21 20:03:26 2025
+  read: IOPS=1425, BW=5702KiB/s (5839kB/s)(768MiB/137838msec)
+   bw (  KiB/s): min= 4840, max= 9168, per=100.00%, avg=5705.48, stdev=277.34, samples=275
+   iops        : min= 1210, max= 2292, avg=1426.37, stdev=69.34, samples=275
+  write: IOPS=476, BW=1905KiB/s (1951kB/s)(256MiB/137838msec); 0 zone resets
+   bw (  KiB/s): min= 1616, max= 3048, per=100.00%, avg=1905.37, stdev=114.02, samples=275
+   iops        : min=  404, max=  762, avg=476.34, stdev=28.50, samples=275
+  cpu          : usr=0.41%, sys=2.00%, ctx=216175, majf=0, minf=13
+  IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=100.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
+     issued rwts: total=196498,65646,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=64
+
+Run status group 0 (all jobs):
+   READ: bw=5702KiB/s (5839kB/s), 5702KiB/s-5702KiB/s (5839kB/s-5839kB/s), io=768MiB (805MB), run=137838-137838msec
+  WRITE: bw=1905KiB/s (1951kB/s), 1905KiB/s-1905KiB/s (1951kB/s-1951kB/s), io=256MiB (269MB), run=137838-137838msec
+
+Disk stats (read/write):
+  vda: ios=196751/65774, sectors=1583944/527632, merge=0/176, ticks=5283763/3509394, in_queue=8793157, util=97.27%

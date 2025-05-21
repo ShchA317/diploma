@@ -17,10 +17,3 @@ load_prediction_config:
       WHERE reading_time BETWEEN now() - interval '1 day' AND now()
       GROUP BY sensor_id;
     rps: 250
-
-  postgresql_config:
-    shared_buffers: "16GB"
-
-  environment:
-    cpu_cores: 32
-    ram_gb: 128

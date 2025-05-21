@@ -27,11 +27,3 @@ load_prediction_config:
       JOIN orders o ON u.id = o.user_id
       WHERE u.interests @> ARRAY['tech'] AND o.status = 'paid';
     rps: 750
-
-  postgresql_config:
-    shared_buffers: "4GB"
-
-  environment:
-    cpu_cores: 8
-    ram_gb: 32
-

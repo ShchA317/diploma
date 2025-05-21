@@ -15,13 +15,3 @@ load_prediction_config:
       INSERT INTO logs (message, metadata) 
       VALUES ('Something happened', '{"level": "info", "component": "backend"}');
     rps: 1500
-
-  postgresql_config:
-    wal_level: "replica"
-    shared_buffers: "4GB"
-    max_wal_size: "2GB"
-    wal_compression: "on"
-
-  environment:
-    cpu_cores: 8
-    ram_gb: 32

@@ -1,0 +1,31 @@
+environment:
+  hardware:
+    cpu:
+      model: 
+        Model name: "Intel Xeon Processor (Icelake)"
+        CPU family: 6
+        Model: 106
+      core_per_socket: 1
+      threads_per_core: 2
+      cache:
+        l1: "64 KiB (2 instances)"
+        l2: "4 MiB (1 instance)"
+        l3: "16 MiB (1 instance)"
+
+    memory:
+      total: "2 GB"
+      swap: "0 B"
+
+    disks:
+      - model: "Samsung SSD 870 EVO 500GB"
+        type: "SSD"
+        size: "80 GB"
+        filesystem: "ext4"
+        scheduler: "deadline"
+        iops: 1500 
+
+  os:
+    name: "Ubuntu"
+    version: "24.04 noble"
+    kernel: "Linux 6.8.0-59-generic"
+    architecture: "x86_64"
