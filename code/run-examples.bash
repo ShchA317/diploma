@@ -1,7 +1,7 @@
 #!/bin/bash
 
-VENV_DIR="venv"
-REQUIREMENTS="requirements.txt"
+VENV_DIR="pg_io_predictor/venv"
+REQUIREMENTS="pg_io_predictor/requirements.txt"
 
 if [ ! -d "$VENV_DIR" ]; then
     echo "🔧 Создаем виртуальное окружение..."
@@ -41,7 +41,7 @@ echo "----------------------------------------"
 
 for file in examples/example*/*.yaml; do
     echo "🔍 Running analyzer on $file"
-    python3 analyze_postgres_files.py "$file"
+    python3 pg_io_predictor/main.py "$file"
     echo
 done
 
