@@ -18,7 +18,7 @@ def estimate_column_size(col_type):
     if 'timestamp' in col_type:
         return 8
     if 'char' in col_type:
-        m = re.search(r'\((\d+)\)', col_type)
+        m = re.search(r'$(\d+)$', col_type)
         return int(m.group(1)) if m else 64
     if 'text' in col_type:
         return 2000
@@ -62,49 +62,42 @@ def estimate_table_storage(name, ddl, row_count, rps, is_joined):
 
     if row_size >= TOAST_THRESHOLD:
         toast_pages = math.ceil(row_count * row_size / (PAGE_SIZE * FILL_FACTOR))
-        files[f"{name}_toast"] = {
-            "filename": f"{name}_toast",
-            "size_bytes": toast_pages * PAGE_SIZE,
-            "rps": rps if is_joined else 0,
-            "access_type": "TOAST read/write"
-        }
+        files[f"{name}_toast"] = create_file_entry(
+            f"{name}_toast", toast_pages * PAGE_SIZE, "TOAST read/write", rps
+        )
         row_size = 50
 
     rows_per_page = max(1, math.floor(PAGE_SIZE * FILL_FACTOR / row_size))
     total_pages = math.ceil(row_count / rows_per_page)
 
-    files[name] = {
-        "filename": name,
-        "size_bytes": total_pages * PAGE_SIZE,
-        "rps": rps if is_joined else 0,
-        "access_type": "Heap access (join read)" if is_joined else "Heap (unused)"
-    }
+    files[name] = create_file_entry(
+        name, total_pages * PAGE_SIZE, "Heap access (join read)" if is_joined else "Heap (unused)", rps
+    )
 
     # Index storage
     index_bytes = row_count * 20
-    files[f"{name}_{index_type}_index"] = {
-        "filename": f"{name}_{index_type}_index",
-        "size_bytes": index_bytes,
-        "rps": rps if is_joined else 0,
-        "access_type": f"Index ({index_type})"
-    }
+    files[f"{name}_{index_type}_index"] = create_file_entry(
+        f"{name}_{index_type}_index", index_bytes, f"Index ({index_type})", rps
+    )
 
     # FSM, VM, system
-    files[f"{name}_fsm"] = {
-        "filename": f"{name}_fsm",
-        "size_bytes": 16384,
-        "rps": 0,
-        "access_type": "Free Space Map"
-    }
+    files[f"{name}_fsm"] = create_file_entry(
+        f"{name}_fsm", 16384, "Free Space Map", 0
+    )
 
-    files[f"{name}_vm"] = {
-        "filename": f"{name}_vm",
-        "size_bytes": 16384,
-        "rps": 0,
-        "access_type": "Visibility Map"
-    }
+    files[f"{name}_vm"] = create_file_entry(
+        f"{name}_vm", 16384, "Visibility Map", 0
+    )
 
     return files
+
+def create_file_entry(filename, size_bytes, access_type, rps):
+    return {
+        "filename": filename,
+        "size_bytes": size_bytes,
+        "rps": rps,
+        "access_type": access_type
+    }
 
 def parse_query_for_tables(query):
     # Примитивный парсер JOIN
@@ -115,12 +108,53 @@ def parse_query_for_tables(query):
         tables.update(filter(None, m))
     return tables
 
-def print_results(all_files):
-    print(f"{'File':<30} {'Size (KB)':<15} {'RPS':<10} {'Access Type'}")
-    print("-" * 80)
+def format_for_yaml(all_files):
+    yaml_output = {
+        "postgres_disk_io_prediction": {
+            "database": "my_database",
+            "tablespace": "pg_default",
+            "files": []
+        },
+        "metadata": {
+            "units": {
+                "size": "MB",
+                "throughput": "MB/s",
+                "operations": "iops (read/write)"
+            },
+            "notes": [
+                "cache_hit_ratio refers to percentage of data read from memory (not disk)",
+                "Estimated throughput is approximate and hardware dependent",
+                "FSM and VM files usually have much lower activity"
+            ]
+        }
+    }
+
     for f in all_files:
-        kb = f['size_bytes'] / 1024
-        print(f"{f['filename']:<30} {kb:<15.1f} {f['rps']:<10} {f['access_type']}")
+        size_mb = round(f['size_bytes'] / (1024 * 1024), 3)
+        file_entry = {
+            "name": f['filename'],
+            "type": f['access_type'].split()[0].lower(),
+            "estimated_size_mb": size_mb,
+            "access_pattern": {
+                "total_operations": f['rps'] * 10,  # Example multiplier for demonstration
+                "io_scenarios": generate_io_scenarios(f['rps'])
+            }
+        }
+        yaml_output["postgres_disk_io_prediction"]["files"].append(file_entry)
+
+    return yaml.dump(yaml_output, indent=2)
+
+def generate_io_scenarios(rps):
+    return [
+        {"cache_hit_ratio": 0.0, "read_ops": int(rps * 0.6), "write_ops": int(rps * 0.4),
+         "read_throughput_mb_s": 80, "write_throughput_mb_s": 40},
+        {"cache_hit_ratio": 0.25, "read_ops": int(rps * 0.45), "write_ops": int(rps * 0.3),
+         "read_throughput_mb_s": 60, "write_throughput_mb_s": 35},
+        {"cache_hit_ratio": 0.5, "read_ops": int(rps * 0.3), "write_ops": int(rps * 0.2),
+         "read_throughput_mb_s": 45, "write_throughput_mb_s": 30},
+        {"cache_hit_ratio": "0.5-0.8", "read_ops": int(rps * 0.2), "write_ops": int(rps * 0.15),
+         "read_throughput_mb_s": 30, "write_throughput_mb_s": 25}
+    ]
 
 if __name__ == "__main__":
     # Добавлен парсер аргументов
@@ -149,4 +183,5 @@ if __name__ == "__main__":
         files = estimate_table_storage(name, table['ddl'], table['row_count'], rps, is_joined)
         all_file_data.extend(files.values())
 
-    print_results(all_file_data)
+    yaml_output = format_for_yaml(all_file_data)
+    print(yaml_output)
