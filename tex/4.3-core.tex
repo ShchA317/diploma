@@ -228,6 +228,72 @@
 \lstinputlisting[language=yaml]{code/example1.yaml}
 
 
+
+\subsubsection{Формат выходных данных алгоритма предсказания нагрузки на систему ввода-вывода}
+
+Выходные данные алгоритма предсказания нагрузки на подсистему ввода-вывода представлены в формате YAML, отражающем структурированное описание файловых компонентов системы управления базами данных PostgreSQL, участвующих в операциях хранения и извлечения данных. Формат включает параметры физического хранения, объёмы, характер обращений и модель оценки производительности в условиях различной эффективности кэширования.
+
+Каждый логический файл базы данных описывается в отдельной структуре с обязательным указанием следующих атрибутов:
+\begin{itemize}
+    \item \texttt{name} --- абсолютный путь к файлу в файловой системе PostgreSQL;
+    \item \texttt{type} --- тип файла: основной (heap), вспомогательный (TOAST), индексный (btree\_index), карта свободного пространства (fsm);
+    \item \texttt{estimated\_size\_mb} --- предполагаемый объём файла в мегабайтах;
+    \item \texttt{access\_pattern} --- описание характера обращений к файлу, включая совокупное количество операций (\texttt{total\_operations}) и сценарии обращения при различных коэффициентах попадания в кэш;
+    \item \texttt{io\_scenarios} --- набор параметров, описывающих производительность при заданной доле кэшированных операций (\texttt{cache\_hit\_ratio}). Для каждого сценария указываются:
+    \begin{itemize}
+        \item \texttt{read\_ops} --- количество операций чтения, направленных непосредственно к устройствам хранения;
+        \item \texttt{write\_ops} --- количество операций записи;
+        \item \texttt{read\_throughput\_mb\_s} --- оценка пропускной способности по чтению (в мегабайтах в секунду);
+        \item \texttt{write\_throughput\_mb\_s} --- оценка пропускной способности по записи.
+    \end{itemize}
+\end{itemize}
+
+Алгоритм учитывает четыре основные модели кэширования:
+\begin{enumerate}
+    \item $0\%$ попаданий в кэш (все обращения направлены к физическому диску);
+    \item $25\%$ попаданий в кэш;
+    \item $50\%$ попаданий в кэш;
+    \item диапазон $50\text{--}80\%$ кэш-хитов, имитирующий реальное поведение при высокоэффективных буферных пулах.
+\end{enumerate}
+
+Дополнительно структура YAML содержит секцию \texttt{metadata}, в которой указываются единицы измерения параметров и поясняющие примечания.
+
+Пример соответствующего YAML-файла приведён ниже:
+\begin{quote}
+\footnotesize
+\begin{verbatim}
+postgres_disk_io_prediction:
+  database: my_database
+  tablespace: pg_default
+  files:
+    - name: base/16384/12345
+      type: heap
+      estimated_size_mb: 2048
+      access_pattern:
+        total_operations: 500000
+        io_scenarios:
+          - cache_hit_ratio: 0.0
+            read_ops: 300000
+            write_ops: 200000
+            read_throughput_mb_s: 80
+            write_throughput_mb_s: 40
+          ...
+metadata:
+  units:
+    size: MB
+    throughput: MB/s
+    operations: iops (read/write)
+  notes:
+    - "cache_hit_ratio refers to percentage of data read from memory (not disk)"
+    - "Estimated throughput is approximate and hardware dependent"
+\end{verbatim}
+\end{quote}
+
+Данный формат обеспечивает пригодность для последующего анализа, визуализации и генерации нагрузочного тестирования в системах моделирования ввода-вывода или автоматизированных средствах администрирования СУБД PostgreSQL.
+
+
+
+
 \subsection{Реализация web-интерфейса}
 \subsubsection{Основные требования к web-интерфейсу}
 
