@@ -1,60 +1,73 @@
-% Приложение А
-\clearpage
-\addcontentsline{toc}{section}{ПРИЛОЖЕНИЕ А Настройки тестовой среды}
+\begin{appendices}
 
+\renewcommand{\lstlistingname}{Листинг}
+\renewcommand{\lstlistlistingname}{Список листингов}
 
-\section*{ПРИЛОЖЕНИЕ А}
-\addcontentsline{toc}{section}{ПРИЛОЖЕНИЕ А: Настройки тестовой среды}
-\begin{center}
-\textbf{Настройки тестовой среды}
-\end{center}
+\newcommand{\cyrillicAlph}[1]{%
+  \ifcase#1\or А\or Б\or В\or Г\or Д\or Е\or Ж\or З\or И\or К\or Л\or М\or Н\or О\or П\or Р\or С\or Т\or У\or Ф\or Х\or Ц\or Ч\or Ш\or Щ\or Э\or Ю\or Я\else ?\fi}
 
-\subsection*{Файл конфигурации \texttt{postgresql.conf}}
+\makeatletter
+\renewcommand{\appendix}{%
+  \par
+  \setcounter{section}{0}%
+  \setcounter{subsection}{0}%
+  \renewcommand{\thesection}{\cyrillicAlph{\value{section}}}%
+}
+\makeatother
+
+\renewcommand{\thesection}{\cyrillicAlph{\value{section}}}
+
+\newcommand{\appsection}[1]{
+  \refstepcounter{section}
+  \section*{ПРИЛОЖЕНИЕ~\thesection. #1}
+  \addcontentsline{toc}{section}{ПРИЛОЖЕНИЕ~\thesection. #1}
+}
+
+\appsection{Настройки тестовой среды}
 \label{app:postgresql_conf}
-Листинг А.1 — Файл конфигурации PostgreSQL
-\lstinputlisting[language=,basicstyle=\scriptsize\ttfamily,caption={Файл конфигурации \texttt{postgresql.conf}},label={lst:postgresql_conf}]{code/postgresql.conf}
 
-% Приложение Б
-\clearpage
-\addcontentsline{toc}{section}{ПРИЛОЖЕНИЕ Б Конфигурации для экспериментов}
-\section*{ПРИЛОЖЕНИЕ Б}
+\lstinputlisting[
+    language=,
+    basicstyle=\scriptsize\ttfamily,
+    caption={Файл конфигурации \texttt{postgresql.conf}},
+    label={lst:postgresql_conf}
+]{code/postgresql.conf}
 
-\begin{center}
-\textbf{Конфигурации для экспериментов}
-\end{center}
-
-\subsection*{\texttt{example1.yaml}}
+\appsection{Конфигурация для экспериментов}
+\subsection{\texttt{example1.yaml}}
 \label{app:example1}
 \lstinputlisting[
     language=,
     basicstyle=\scriptsize\ttfamily,
-    caption={Листинг Б.1 — Конфигурация для эксперимента},
+    caption={Конфигурация для эксперимента \texttt{example1.yaml}},
     label={lst:example1}
 ]{code/example1.yaml}
 
-\subsection*{\texttt{example2.yaml}}
+\subsection{\texttt{example2.yaml}}
 \label{app:example2}
 \lstinputlisting[
     language=,
     basicstyle=\scriptsize\ttfamily,
-    caption={Листинг Б.2 — Конфигурация для эксперимента},
+    caption={Конфигурация для эксперимента \texttt{example2.yaml}},
     label={lst:example2}
 ]{code/example2.yaml}
 
-\subsection*{\texttt{example3.yaml}}
+\subsection{\texttt{example3.yaml}}
 \label{app:example3}
 \lstinputlisting[
     language=,
     basicstyle=\scriptsize\ttfamily,
-    caption={Листинг Б.3 — Конфигурация для эксперимента},
+    caption={Конфигурация для эксперимента \texttt{example3.yaml}},
     label={lst:example3}
 ]{code/example3.yaml}
 
-\subsection*{\texttt{example4.yaml}}
+\subsection{\texttt{example4.yaml}}
 \label{app:example4}
 \lstinputlisting[
     language=,
     basicstyle=\scriptsize\ttfamily,
-    caption={Листинг Б.4 — Конфигурация для эксперимента},
+    caption={Конфигурация для эксперимента \texttt{example4.yaml}},
     label={lst:example4}
 ]{code/example4.yaml}
+
+\end{appendices}
