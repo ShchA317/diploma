@@ -271,21 +271,30 @@ awk -v duration="$DURATION" '
     }
 ' "$PRE_PROC" "$POST_PROC" | tee -a "$RESULT_FILE"
 
+echo "--- Содержимое PRE_PROC ---"; cat "$PRE_PROC"
+echo "--- Содержимое POST_PROC ---"; cat "$POST_PROC"
 
 echo
-echo "📊 Общая диск-нагрузка (iostat):" | tee -a "$RESULT_FILE"
+
+
 DISK=$(iostat -dx | awk '/^Device:/ {getline; print $1; exit}')
-echo "Устройство: $DISK" | tee -a "$RESULT_FILE"
-echo
-paste <(grep "^$DISK" "$PRE_SYS") <(grep "^$DISK" "$POST_SYS") | awk '
-{
-    print "Δ iostat поля:"
-    printf "r/s:    %.2f -> %.2f\n", $2, $15;
-    printf "w/s:    %.2f -> %.2f\n", $3, $16;
-    printf "rKB/s:  %.2f -> %.2f\n", $4, $17;
-    printf "wKB/s:  %.2f -> %.2f\n", $5, $18;
-    printf "await:  %.2f -> %.2f\n", $10, $23;
-}' | tee -a "$RESULT_FILE"
+if [ -z "$DISK" ]; then
+    echo "Не удалось определить диск для анализа iostat!" | tee -a "$RESULT_FILE"
+else
+    echo "Устройство: $DISK" | tee -a "$RESULT_FILE"
+    echo "📊 Общая диск-нагрузка (iostat):" | tee -a "$RESULT_FILE"
+    DISK=$(iostat -dx | awk '/^Device:/ {getline; print $1; exit}')
+    echo "Устройство: $DISK" | tee -a "$RESULT_FILE"
+    echo
+    paste <(grep "^$DISK" "$PRE_SYS") <(grep "^$DISK" "$POST_SYS") | awk '
+    {
+        print "Δ iostat поля:"
+        printf "r/s:    %.2f -> %.2f\n", $2, $15;
+        printf "w/s:    %.2f -> %.2f\n", $3, $16;
+        printf "rKB/s:  %.2f -> %.2f\n", $4, $17;
+        printf "wKB/s:  %.2f -> %.2f\n", $5, $18;
+        printf "await:  %.2f -> %.2f\n", $10, $23;
+    }' | tee -a "$RESULT_FILE"
 
 echo
 echo "✅ Тест завершён. Лог: $LOG_FILE | Результаты: $RESULT_FILE"
