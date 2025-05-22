@@ -295,6 +295,7 @@ else
         printf "wKB/s:  %.2f -> %.2f\n", $5, $18;
         printf "await:  %.2f -> %.2f\n", $10, $23;
     }' | tee -a "$RESULT_FILE"
+fi
 
 echo
 echo "✅ Тест завершён. Лог: $LOG_FILE | Результаты: $RESULT_FILE"
