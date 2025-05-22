@@ -56,7 +56,14 @@
 \usepackage{titlesec}
 \titleformat{\section}{\normalsize\bfseries\centering}{\thesection}{1em}{}
 \titleformat{\subsection}{\normalsize\bfseries\centering}{\thesubsection}{1em}{}
-\titlespacing*{\section}{0pt}{12pt}{12pt}  % Отступы вокруг заголовков
+\titlespacing*{\section}{0pt}{24pt}{12pt}  % Между разделами — 24pt до, 12pt после
+\titlespacing*{\subsection}{0pt}{18pt}{6pt}
+
+\usepackage[labelsep=endash]{caption}
+\captionsetup{
+  justification=centering,
+  font={bf,small}
+}
 
 % Настройка переносов через polyglossia
 \PolyglossiaSetup{russian}{
@@ -67,6 +74,12 @@
         PostgreSQL,
         мас-шта-би-ро-ва-ние
     }
+}
+
+\captionsetup{
+  labelsep=endash,
+  justification=centering,
+  font={bf,normal,onehalfspacing,singlespacing,small} % small=12pt в 14pt документе
 }
 
 \addto\captionsrussian{\renewcommand{\contentsname}{СОДЕРЖАНИЕ}}

@@ -29,16 +29,16 @@ load_prediction_config:
     rps: 750
 
   postgresql_config:
-    shared_buffers: "4GB"
-    effective_cache_size: "12GB"
+    shared_buffers: "128MB"
+    effective_cache_size: "4GB" 
     work_mem: "4MB"
     maintenance_work_mem: "64MB"
     wal_buffers: "-1"
     max_wal_size: "1GB"
     min_wal_size: "80MB"
     checkpoint_timeout: "5min"
-    checkpoint_completion_target: 0.9
-    wal_compression: "on"
+    checkpoint_completion_target: 0.5
+    wal_compression: "off"
     wal_writer_delay: "200ms"
     wal_level: "replica"
     fsync: "on"
@@ -53,7 +53,6 @@ load_prediction_config:
     autovacuum_vacuum_cost_delay: "20ms"
 
   environment:
-    cpu_cores: 8
-    ram_gb: 32
+    cpu_cores: 2
+    ram_gb: 2
     storage_type: "ssd"
-    os_cache_enabled: true

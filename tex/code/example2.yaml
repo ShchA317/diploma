@@ -17,3 +17,32 @@ load_prediction_config:
       WHERE reading_time BETWEEN now() - interval '1 day' AND now()
       GROUP BY sensor_id;
     rps: 250
+
+  postgresql_config:
+    shared_buffers: "128MB"
+    effective_cache_size: "4GB" 
+    work_mem: "4MB"
+    maintenance_work_mem: "64MB"
+    wal_buffers: "-1"
+    max_wal_size: "1GB"
+    min_wal_size: "80MB"
+    checkpoint_timeout: "5min"
+    checkpoint_completion_target: 0.5
+    wal_compression: "off"
+    wal_writer_delay: "200ms"
+    wal_level: "replica"
+    fsync: "on"
+    synchronous_commit: "on"
+    random_page_cost: 4.0
+    seq_page_cost: 1.0
+    temp_buffers: "8MB"
+    autovacuum: "on"
+    autovacuum_max_workers: 3
+    autovacuum_naptime: "1min"
+    autovacuum_vacuum_cost_limit: 200
+    autovacuum_vacuum_cost_delay: "20ms"
+
+  environment:
+    cpu_cores: 2
+    ram_gb: 2
+    storage_type: "ssd"
