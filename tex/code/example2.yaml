@@ -1,0 +1,19 @@
+load_prediction_config:
+  tables:
+    - name: sensor_data
+      ddl: |
+        CREATE TABLE sensor_data (
+          id BIGSERIAL PRIMARY KEY,
+          sensor_id INT,
+          temperature FLOAT,
+          reading_time TIMESTAMPTZ
+        );
+      row_count: 100000000
+
+  load_generator:
+    query: |
+      SELECT sensor_id, AVG(temperature)
+      FROM sensor_data
+      WHERE reading_time BETWEEN now() - interval '1 day' AND now()
+      GROUP BY sensor_id;
+    rps: 250

@@ -1,0 +1,16 @@
+load_prediction_config:
+  tables:
+    - name: accounts
+      ddl: |
+        CREATE TABLE accounts (
+          id SERIAL PRIMARY KEY,
+          login TEXT UNIQUE,
+          password_hash TEXT,
+          email TEXT
+        );
+      row_count: 200000
+
+  load_generator:
+    query: |
+      SELECT id FROM accounts WHERE login = 'test_user';
+    rps: 3000
