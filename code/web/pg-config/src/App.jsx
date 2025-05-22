@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import hintsCSV from "./postgres_config_hints.csv?raw";
+import PredictionResult from "./PredictionResult";
 import './App.css';
+import jsyaml from 'js-yaml';
 
 export default function App() {
   const [tables, setTables] = useState([{ name: "", ddl: "", row_count: "" }]);
@@ -55,6 +57,8 @@ export default function App() {
   });
   const [hints, setHints] = useState({});
 
+  const [predictionResult, setPredictionResult] = useState(null);
+
   useEffect(() => {
     Papa.parse(hintsCSV, {
       header: true,
@@ -68,6 +72,24 @@ export default function App() {
       },
     });
   }, []);
+
+  var examplePrediction = {}
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('output-example.yaml');
+      const text = await response.text();
+      const data = jsyaml.load(text) || {};
+      setPredictionResult(data);
+    } catch (error) {
+      setPredictionResult({
+        error: "Failed to load prediction data",
+        metadata: {
+          notes: ["Could not process the prediction file"]
+        }
+      });
+    }
+  };
 
   const addTable = () => {
     setTables([...tables, { name: "", ddl: "", row_count: "" }]);
@@ -299,9 +321,14 @@ export default function App() {
             />
           </section>
 
-          <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow focus:outline-none focus:shadow-outline">
-            Submit
-          </button>
+        <button
+          className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow focus:outline-none focus:shadow-outline"
+          onClick={() => handleSubmit(examplePrediction)}
+        >
+          Submit
+        </button>
+
+        <PredictionResult prediction={predictionResult} />
         </div>
       </div>
     </div>
