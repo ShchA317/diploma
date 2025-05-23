@@ -29,6 +29,7 @@
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage{csquotes}
+\usepackage{pdfpages}
 
 \usepackage{polyglossia}
 \setmainlanguage{russian}  % ← Основной язык
@@ -155,8 +156,8 @@
 \usepackage{alphalph}
 
 \begin{document}
-    % \newpage
-    % \input{0-titul}   если вдруг надо будет титульник
+    \includepdf[pages={1}]{pdf/title.pdf} % Титульный лист
+    \includepdf[width=!, height=!, pages={1-2}]{pdf/abstract.pdf}
 
     \begin{center}
         \tableofcontents
