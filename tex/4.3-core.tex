@@ -257,30 +257,7 @@
 \begin{quote}
 \footnotesize
 \begin{verbatim}
-postgres_disk_io_prediction:
-  database: my_database
-  tablespace: pg_default
-  files:
-    - name: base/16384/12345
-      type: heap
-      estimated_size_mb: 2048
-      access_pattern:
-        total_operations: 500000
-        io_scenarios:
-          - cache_hit_ratio: 0.0
-            read_ops: 300000
-            write_ops: 200000
-            read_throughput_mb_s: 80
-            write_throughput_mb_s: 40
-          ...
-metadata:
-  units:
-    size: MB
-    throughput: MB/s
-    operations: iops (read/write)
-  notes:
-    - "cache_hit_ratio refers to percentage of data read from memory (not disk)"
-    - "Estimated throughput is approximate and hardware dependent"
+
 \end{verbatim}
 \end{quote}
 
@@ -357,7 +334,7 @@ metadata:
 Итоговая реализация web-интерфейса позволяет гибко задать все существенные параметры, необходимые для моделирования нагрузки и последующего анализа. Структура интерфейса обеспечивает как простоту начального освоения, так и расширяемость. Выбранные технологические решения и разделение логики на отдельные компоненты обеспечивают независимость модулей, устойчивость к ошибкам и возможность масштабирования при развитии проекта.
 
 
-\subsubsection{Автоматизация запуска с помощью Bash и интеграция с GitHub Actions}
+\subsection{Автоматизация запуска с помощью Bash и интеграция с GitHub Actions}
 
 Автоматизация рутинных задач является важной частью современного программирования, позволяя разработчикам сосредоточиться на решении более сложных и творческих задач. В данном разделе рассмотрим процесс автоматизации запуска скрипта с использованием Bash и его интеграцию в процесс CI/CD посредством GitHub Actions.
 
@@ -389,14 +366,9 @@ metadata:
 
 GitHub Actions предоставляет мощные инструменты для автоматизации рабочих процессов. Интеграция Bash-скрипта в процесс CI/CD с помощью GitHub Actions позволяет запускать анализатор автоматически при каждом коммите. Ниже приведен пример конфигурации рабочего процесса:
 
-\begin{center}
-\textbf{Листинг 1} --- Содержимое файла \texttt{actions.yaml}
-\end{center}
+\insertlisting{Содержимое файла \texttt{actions.yaml}}{code/actions.yaml}
 
-\lstinputlisting[language=yaml]{code/actions.yaml}
-
-
-\subsubsection{Резюме по реализации программного средства}
+\subsection{Резюме по реализации программного средства}
 
 В данной работе было реализовано программное средство для оценки объёмов и интенсивности обращения к дисковым структурам в системе управления базами данных PostgreSQL на основе анализа схемы данных, предполагаемой нагрузки и параметров окружения.
 

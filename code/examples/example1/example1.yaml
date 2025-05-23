@@ -26,4 +26,4 @@ load_prediction_config:
       FROM users u
       JOIN orders o ON u.id = o.user_id
       WHERE u.interests @> ARRAY['tech'] AND o.status = 'paid';
-    rps: 750
+    rps: 5

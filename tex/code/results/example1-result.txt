@@ -1,0 +1,33 @@
+# 📊 Результаты нагрузки PostgreSQL
+
+## Δ PostgreSQL I/O:
+
+### 📌 pg_stat_io (Δ чтений/записей):
+  backend|relation|main         | Δread: 1749    Δwrite: 0     
+  checkpointer|relation|main    | Δread: 0      Δwrite: 300   
+  background|relation|fsm       | Δread: 50     Δwrite: 0     
+
+### 📌 pg_statio_user_tables (Δ disk read/cache hit):
+  users                         | Δdisk read: 450   Δcache hit: 749550
+  orders                        | Δdisk read: 1350  Δcache hit: 1198650
+
+
+📊 Δ Системная статистика (/proc/42564/io): (за время теста выполнялось)
+rchar:     : 4465126804 (4258.28 MB total, 446512680.40/sec)
+wchar:     : 3276873890 (3125.07 MB total, 327687389.00/sec)
+syscr:     :     420186 (410.34 KB total, 42018.60/sec)
+syscw:     :     400371 (390.99 KB total, 40037.10/sec)
+
+📦 Пропускная способность: 443 MB (44.30 MB/s)
+⚙️  Всего операций ввода/вывода: 391420 (39 142.00 IOPS)
+
+## Общая диск-нагрузка (iostat):
+
+Устройство: sda
+
+Δ iostat поля:
+r/s:    0.00 -> 288.00
+w/s:    0.00 -> 288.00
+rKB/s:  0.00 -> 46080.00
+wKB/s:  0.00 -> 46080.00
+await:  0.64 -> 3.10

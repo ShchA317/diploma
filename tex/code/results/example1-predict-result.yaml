@@ -1,0 +1,76 @@
+postgres_disk_io_prediction:
+  database: my_database
+  files:
+  - access_pattern:
+      io_scenarios:
+      - cache_hit_ratio: 0.0
+        read_ops: 3
+        read_throughput_mb_s: 80
+        write_ops: 2
+        write_throughput_mb_s: 40
+      - ...
+      total_operations: 50
+    estimated_size_mb: 3906.25
+    name: users
+    type: heap
+  - access_pattern:
+      io_scenarios:
+      - cache_hit_ratio: 0.0
+        read_ops: 3
+        read_throughput_mb_s: 80
+        write_ops: 2
+        write_throughput_mb_s: 40
+      - ...
+      total_operations: 50
+    estimated_size_mb: 172334.562
+    name: users_toast
+    type: toast
+  - access_pattern:
+      io_scenarios:
+      - cache_hit_ratio: 0.0
+        read_ops: 3
+        read_throughput_mb_s: 80
+        write_ops: 2
+        write_throughput_mb_s: 40
+      - ...
+      total_operations: 50
+    estimated_size_mb: 3814.703
+    name: users_toast_index
+    type: toast
+  - access_pattern:
+      io_scenarios:
+      - cache_hit_ratio: 0.0
+        read_ops: 3
+        read_throughput_mb_s: 80
+        write_ops: 2
+        write_throughput_mb_s: 40
+      - ...
+      total_operations: 50
+    estimated_size_mb: 9375.0
+    name: orders
+    type: heap
+  - access_pattern:
+      io_scenarios:
+      - cache_hit_ratio: 0.0
+        read_ops: 3
+        read_throughput_mb_s: 80
+        write_ops: 2
+        write_throughput_mb_s: 40
+      - ...
+      total_operations: 50
+    estimated_size_mb: 137867.648
+    name: orders_toast
+    type: toast
+  - access_pattern:
+      io_scenarios:
+      - cache_hit_ratio: 0.0
+        read_ops: 3
+        read_throughput_mb_s: 80
+        write_ops: 2
+        write_throughput_mb_s: 40
+      - ...
+      total_operations: 50
+    estimated_size_mb: 3051.758
+    name: orders_toast_index
+    type: toast
+  tablespace: pg_default
