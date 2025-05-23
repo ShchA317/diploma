@@ -26,9 +26,25 @@
 \appsection{Настройки тестовой среды}
 \label{app:postgresql_conf}
 
+
+\lstset{
+    basicstyle=\footnotesize\ttfamily,  % Основной шрифт
+    numbers=left,                       % Нумерация строк слева
+    numberstyle=\tiny,                  % Стиль номеров строк
+    frame=single,                       % Рамка вокруг кода
+    breaklines=true,                    % Перенос длинных строк
+    captionpos=b,                       % Позиция подписи (bottom)
+    tabsize=4,                          % Размер табуляции
+    showstringspaces=false,             % Не показывать пробелы в строках
+    keywordstyle=\color{blue},          % Стиль ключевых слов (если используется подсветка)
+    commentstyle=\color{gray},          % Стиль комментариев
+    stringstyle=\color{green},          % Стиль строк
+    extendedchars=true,                 % Поддержка кириллицы
+    inputencoding=utf8,                 % Кодировка файлов
+    literate={ö}{{\"o}}1 {ä}{{\"a}}1    % Поддержка спецсимволов (если нужно)
+}
+
 \lstinputlisting[
-    language=,
-    basicstyle=\scriptsize\ttfamily,
     caption={Файл конфигурации \texttt{postgresql.conf}},
     label={lst:postgresql_conf}
 ]{code/postgresql.conf}
@@ -37,8 +53,7 @@
 \subsection{\texttt{example1.yaml}}
 \label{app:example1}
 \lstinputlisting[
-    language=,
-    basicstyle=\scriptsize\ttfamily,
+    language=yaml,
     caption={Конфигурация для эксперимента \texttt{example1.yaml}},
     label={lst:example1}
 ]{code/example1.yaml}
@@ -46,8 +61,7 @@
 \subsection{\texttt{example2.yaml}}
 \label{app:example2}
 \lstinputlisting[
-    language=,
-    basicstyle=\scriptsize\ttfamily,
+    language=yaml,
     caption={Конфигурация для эксперимента \texttt{example2.yaml}},
     label={lst:example2}
 ]{code/example2.yaml}
@@ -55,8 +69,7 @@
 \subsection{\texttt{example3.yaml}}
 \label{app:example3}
 \lstinputlisting[
-    language=,
-    basicstyle=\scriptsize\ttfamily,
+    language=yaml,
     caption={Конфигурация для эксперимента \texttt{example3.yaml}},
     label={lst:example3}
 ]{code/example3.yaml}
@@ -64,8 +77,7 @@
 \subsection{\texttt{example4.yaml}}
 \label{app:example4}
 \lstinputlisting[
-    language=,
-    basicstyle=\scriptsize\ttfamily,
+    language=yaml,
     caption={Конфигурация для эксперимента \texttt{example4.yaml}},
     label={lst:example4}
 ]{code/example4.yaml}
